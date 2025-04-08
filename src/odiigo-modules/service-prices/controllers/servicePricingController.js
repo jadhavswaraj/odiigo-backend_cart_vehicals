@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const ServicePricing = require('../model/pricing');
+const Service = require('../../categories/services/models/services')
 
 // @desc    Get all service pricing records
 // @route   GET /api/service-pricing
@@ -33,8 +34,42 @@ const getServicePrice = asyncHandler(async (req, res) => {
 // @desc    Create a new service pricing entry
 // @route   POST /api/service-pricing
 // @access  Private (Admin only)
+// const createServicePricing = asyncHandler(async (req, res) => {
+//     const { service_id, car_make, car_model, fuel_type, transmission_type, service_price } = req.body;
+
+//     const newPricing = new ServicePricing({
+//         service_id,
+//         car_make,
+//         car_model,
+//         fuel_type,
+//         transmission_type,
+//         service_price
+//     });
+
+//     await newPricing.save();
+//     res.status(201).json(newPricing);
+// });
 const createServicePricing = asyncHandler(async (req, res) => {
     const { service_id, car_make, car_model, fuel_type, transmission_type, service_price } = req.body;
+
+    // Check if the referenced service_id exists
+    const serviceExists = await Service.findById(service_id);
+    if (!serviceExists) {
+        return res.status(400).json({ message: "Invalid service_id, service not found" });
+    }
+
+    // Prevent duplicate pricing for the same service, make, model, fuel, and transmission
+    const existingPricing = await ServicePricing.findOne({
+        service_id,
+        car_make,
+        car_model,
+        fuel_type,
+        transmission_type
+    });
+
+    if (existingPricing) {
+        return res.status(400).json({ message: "Pricing already exists for this configuration" });
+    }
 
     const newPricing = new ServicePricing({
         service_id,

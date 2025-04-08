@@ -26,6 +26,16 @@ connectDb();
 const app = express();
 const port = 3000;
 
+<<<<<<< HEAD
+=======
+// app.use(cors());
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5173", "http://192.168.137.3:5173"], // Use your actual IP
+//     credentials: true,
+//   })
+// );
+>>>>>>> upstream/main
 app.use(
   cors({
     origin: "*", // Temporarily allow all origins
