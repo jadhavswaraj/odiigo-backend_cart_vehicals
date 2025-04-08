@@ -26,8 +26,6 @@ connectDb();
 const app = express();
 const port = 3000;
 
-<<<<<<< HEAD
-=======
 // app.use(cors());
 // app.use(
 //   cors({
@@ -35,7 +33,6 @@ const port = 3000;
 //     credentials: true,
 //   })
 // );
->>>>>>> upstream/main
 app.use(
   cors({
     origin: "*", // Temporarily allow all origins
